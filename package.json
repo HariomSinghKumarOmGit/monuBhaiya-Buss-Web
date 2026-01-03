@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "workspaces": [
+    "office-1"
+  ],
   "scripts": {
     "dev": "npm run dev --prefix office-1",
     "build": "npm run build --prefix office-1",
@@ -11,6 +14,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
-    "tailwindcss": "^4.1.18"
+    "@vitejs/plugin-react": "^5.0.4",
+    "tailwindcss": "^4.1.18",
+    "vite": "^7.3.0"
   }
 }
