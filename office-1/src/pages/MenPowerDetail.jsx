@@ -4,11 +4,14 @@ import { ChevronLeft, Users, MapPin, Award, Briefcase, CheckCircle } from 'lucid
 import { getMenPowerById } from '../data/menPowerData'
 import Header from '../components/Header'
 
+import ContactModal from '../components/ContactModal'
+
 const MenPowerDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const service = getMenPowerById(id)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   if (!service) {
     return (
@@ -149,13 +152,22 @@ const MenPowerDetail = () => {
                 <p className="text-slate-600 leading-relaxed">{service.description}</p>
               </div>
 
-              <button className="w-full py-4 bg-orange-600 text-white text-lg font-black rounded-xl hover:bg-orange-700 transition-all shadow-xl hover:shadow-2xl active:scale-95">
+              <button 
+                onClick={() => setIsContactModalOpen(true)}
+                className="w-full py-4 bg-orange-600 text-white text-lg font-black rounded-xl hover:bg-orange-700 transition-all shadow-xl hover:shadow-2xl active:scale-95"
+              >
                 Hire Now
               </button>
             </div>
           </div>
         </div>
       </main>
+
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+        title={`Hire ${service.title}`}
+      />
     </div>
   )
 }

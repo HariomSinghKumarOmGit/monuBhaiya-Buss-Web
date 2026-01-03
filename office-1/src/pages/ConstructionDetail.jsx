@@ -4,11 +4,14 @@ import { ChevronLeft, Building2, MapPin, Calendar, Layers, CheckCircle } from 'l
 import { getConstructionById } from '../data/constructionData'
 import Header from '../components/Header'
 
+import ContactModal from '../components/ContactModal'
+
 const ConstructionDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const project = getConstructionById(id)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   if (!project) {
     return (
@@ -149,13 +152,22 @@ const ConstructionDetail = () => {
                 <p className="text-slate-600 leading-relaxed">{project.description}</p>
               </div>
 
-              <button className="w-full py-4 bg-green-600 text-white text-lg font-black rounded-xl hover:bg-green-700 transition-all shadow-xl hover:shadow-2xl active:scale-95">
+              <button 
+                onClick={() => setIsContactModalOpen(true)}
+                className="w-full py-4 bg-green-600 text-white text-lg font-black rounded-xl hover:bg-green-700 transition-all shadow-xl hover:shadow-2xl active:scale-95"
+              >
                 Request Quote
               </button>
             </div>
           </div>
         </div>
       </main>
+
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+        title={`Quote for ${project.title}`}
+      />
     </div>
   )
 }

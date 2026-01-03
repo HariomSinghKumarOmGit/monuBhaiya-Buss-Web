@@ -4,11 +4,14 @@ import { ChevronLeft, Bed, Bath, Home, MapPin, Building2, Calendar, FileText, Sh
 import { getPropertyById } from '../data/propertyData'
 import Header from '../components/Header'
 
+import ContactModal from '../components/ContactModal'
+
 const PropertyDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const property = getPropertyById(id)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   // Handle invalid property ID
   if (!property) {
@@ -229,13 +232,22 @@ const PropertyDetail = () => {
               </div>
 
               {/* CTA Button */}
-              <button className="w-full py-4 bg-blue-600 text-white text-lg font-black rounded-xl hover:bg-blue-700 transition-all shadow-xl hover:shadow-2xl active:scale-95">
+              <button 
+                onClick={() => setIsContactModalOpen(true)}
+                className="w-full py-4 bg-blue-600 text-white text-lg font-black rounded-xl hover:bg-blue-700 transition-all shadow-xl hover:shadow-2xl active:scale-95"
+              >
                 Contact Agent
               </button>
             </div>
           </div>
         </div>
       </main>
+
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+        title={`Inquire about ${property.title}`}
+      />
     </div>
   )
 }

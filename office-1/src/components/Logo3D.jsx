@@ -1,6 +1,6 @@
-import React, { useRef, Suspense } from 'react'
+import React, { useRef, Suspense, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useTexture, Float, ContactShadows, RoundedBox, PresentationControls } from '@react-three/drei'
+import { useTexture, Float, ContactShadows, RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
 
 function LogoStructure() {
@@ -38,17 +38,46 @@ function LogoStructure() {
   )
 }
 
+function MouseTiltGroup({ children, hovered }) {
+  const group = useRef()
+  const maxTilt = 45 * (Math.PI / 180) // 45 degrees in radians
+
+  useFrame((state) => {
+    if (!group.current) return
+
+    let targetX = 0
+    let targetY = 0
+
+    if (hovered) {
+      // state.pointer gives normalized coordinates [-1, 1]
+      targetX = -state.pointer.y * maxTilt
+      targetY = state.pointer.x * maxTilt
+    }
+
+    // Smoothly interpolate rotation
+    group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, targetX, 0.1)
+    group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, targetY, 0.1)
+  })
+
+  return (
+    <group ref={group}>
+      {children}
+    </group>
+  )
+}
+
 // Preload the texture to ensure it's available immediately on every reload
 useTexture.preload('/logo.jpg')
 
 export default function Logo3D() {
+  const [isHovered, setIsHovered] = useState(false)
+
   return (
-    <div className="w-24 h-24 flex items-center justify-center">
-      {/* 
-          Ensures the logo space is NEVER empty. 
-          The fallback is a simple blue square that matches the branding 
-          until the 3D textures are fully ready.
-      */}
+    <div 
+      className="w-24 h-24 flex items-center justify-center cursor-pointer"
+      onPointerEnter={() => setIsHovered(true)}
+      onPointerLeave={() => setIsHovered(false)}
+    >
       <Suspense fallback={<div className="w-12 h-12 bg-white rounded-xl animate-pulse" />}>
         <Canvas 
           alpha 
@@ -61,26 +90,15 @@ export default function Logo3D() {
             powerPreference: "high-performance"
           }}
         >
-          {/* Robust lighting that doesn't depend on external environment files */}
+          {/* Robust lighting */}
           <ambientLight intensity={1.5} />
           <pointLight position={[10, 10, 10]} intensity={2} />
           <pointLight position={[-10, 5, 5]} color="#3b82f6" intensity={1} />
           <spotLight position={[0, 5, 10]} angle={0.3} intensity={1} />
           
-          <PresentationControls
-            global={true} // Allows user to interact from anywhere
-            cursor={true}
-            snap={true} // IMMEDIATELY returns to mean position on release
-            speed={2.5} // Faster interaction
-            zoom={1}
-            rotation={[0, 0, 0]} // Baseline 0 position
-            polar={[-0.4, 0.4]} // Vertical swing
-            azimuth={[-0.4, 0.4]} // Horizontal swing
-            // TENSION 500 makes it snap back extremely fast ("automatically")
-            config={{ mass: 1, tension: 500, friction: 30 }}
-          >
+          <MouseTiltGroup hovered={isHovered}>
             <LogoStructure />
-          </PresentationControls>
+          </MouseTiltGroup>
           
           <ContactShadows 
             position={[0, -1.2, 0]} 

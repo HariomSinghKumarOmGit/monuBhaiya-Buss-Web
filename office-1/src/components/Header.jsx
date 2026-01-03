@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Logo3D from './Logo3D'
+import ContactModal from './ContactModal'
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -107,11 +109,20 @@ const Header = () => {
           <button className="hidden sm:block text-sm font-bold text-[#0A1128] hover:text-blue-600 transition-colors">
             Login
           </button>
-          <button className="px-6 py-2.5 bg-[#0A1128] text-white text-sm font-bold rounded-lg hover:bg-blue-600 transition-all transform hover:-translate-y-0.5 shadow-xl shadow-blue-900/10 active:scale-95">
+          <button 
+            onClick={() => setIsContactModalOpen(true)}
+            className="px-6 py-2.5 bg-[#0A1128] text-white text-sm font-bold rounded-lg hover:bg-blue-600 transition-all transform hover:-translate-y-0.5 shadow-xl shadow-blue-900/10 active:scale-95"
+          >
             Contact Us
           </button>
         </div>
       </div>
+
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+        title="Contact Vastu Realty"
+      />
     </nav>
   )
 }

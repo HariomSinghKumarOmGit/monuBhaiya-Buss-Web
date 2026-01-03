@@ -4,12 +4,15 @@ import MediaCarousel from './components/MediaCarousel'
 import PropertyListings from './components/PropertyListings'
 import ConstructionListings from './components/ConstructionListings'
 import MenPowerListings from './components/MenPowerListings'
+import AboutSection from './components/AboutSection'
+import Footer from './components/Footer'
 import PropertyDetail from './pages/PropertyDetail'
 import PropertyList from './pages/PropertyList'
 import ConstructionDetail from './pages/ConstructionDetail'
 import ConstructionList from './pages/ConstructionList'
 import MenPowerDetail from './pages/MenPowerDetail'
 import MenPowerList from './pages/MenPowerList'
+import ScrollToTop from './components/ScrollToTop'
 import './App.css'
 
 // Home Page Component
@@ -46,6 +49,9 @@ function HomePage() {
 
         {/* Men Power Section */}
         <MenPowerListings />
+
+        {/* About / Leadership Section */}
+        <AboutSection />
       </main>
     </div>
   )
@@ -54,6 +60,7 @@ function HomePage() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/buy-rent/list" element={<PropertyList />} />
@@ -63,6 +70,7 @@ function App() {
         <Route path="/men-power/list" element={<MenPowerList />} />
         <Route path="/men-power/:id" element={<MenPowerDetail />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
